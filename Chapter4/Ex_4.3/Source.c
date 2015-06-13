@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <math.h>
 #define MAXOP 100
 #define NUMBER '0'
 #define MAXVAL 100
@@ -14,7 +15,6 @@ int main()
 	int type;
 	double op2;
 	char s[MAXOP];
-
 	while ((type = getop(s)) != EOF)
 	{
 		switch (type)
@@ -36,6 +36,17 @@ int main()
 			op2 = pop();
 			if (op2 != 0.0)
 				push(pop() / op2);
+			else
+				printf("error: zero division \n");
+			break;
+		case '%':
+			op2 = pop();
+			if (op2 != 0.0)
+			{
+				double a = pop();
+				double b = fmod(a, op2);
+				push(b);
+			}
 			else
 				printf("error: zero division \n");
 			break;
@@ -92,8 +103,44 @@ void ungetch(int c)
 
 int getop(char s[])
 {
-	//s = "1 2 - 4 5 *";
+	int i = 0, c, next;
+	while ((s[0] = c = getch()) == ' ' || c == '\t');
 
+	s[1] = '\0';
+	if (!isdigit(c) && c != '.' && c != '-')
+		return c;
+
+	if (c == '-')
+	{
+		next = getch();
+		if (!isdigit(next) && next != '.')
+		{
+			return c;
+		}
+		c = next;
+	}
+	else
+	{
+		c = getch();
+	}
+	while (isdigit(s[++i] = c))
+	{
+		c = getch();
+	}
+	if (c == '.')
+	{
+		while (isdigit(s[++i] = c = getch()));
+	}
+	s[i] = '\0';
+	if (c != EOF)
+		ungetch(c);
+	return NUMBER;
+}
+
+
+/*int getop(char s[])
+{
+	//s = "1 2 - 4 5 *";
 	int i, c;
 	while ((s[0] = c = getch()) == ' ' || c == '\t')
 	{
@@ -121,4 +168,4 @@ int getop(char s[])
 	if (c != EOF)
 		ungetch(c);
 	return NUMBER;		
-}
+}*/
