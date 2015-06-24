@@ -9,6 +9,10 @@
 int getop(char s[]);
 void push(double f);
 double pop(void);
+double peek(void);
+void duplicate(void);
+void swipe_top_elements(void);
+void clear_stack(void);
 
 int main()
 {
@@ -49,12 +53,23 @@ int main()
 			}
 			else
 				printf("error: zero division \n");
-			break;		
+			break;
+		case '?':
+			peek();
+			break;
+		case '#':
+			duplicate();
+			break;
+		case '~':
+			swipe_top_elements();
+			break;
+		case '!':
+			clear_stack();
 		case '\n':
 			printf("\t%.8g\n", pop());
-			break;		
+			break;
 		default:
-			printf("error: unknown command %s\n",s);
+			printf("error: unknown command %s\n", s);
 			break;
 		}
 	}
@@ -83,6 +98,38 @@ double pop(void)
 		printf("error: stack empty\n");
 	return 0.0;
 }
+
+double peek(void)
+{
+	if (sp > 0)
+		return val[sp-1];
+	else
+		printf("error: stack empty\n");
+	return 0.0;
+}
+
+void duplicate(void)
+{
+	push(peek());
+}
+
+void swipe_top_elements(void)
+{
+	double tmp1 = pop();
+	double tmp2 = pop();
+	push(tmp1);
+	push(tmp2);
+}
+
+void clear_stack(void)
+{
+	while (sp > 0)
+	{
+		val[sp--] = 0;
+	}
+}
+
+
 
 #define BUFFERSIZE 100
 char buf[BUFFERSIZE];
@@ -136,36 +183,3 @@ int getop(char s[])
 		ungetch(c);
 	return NUMBER;
 }
-
-
-/*int getop(char s[])
-{
-	//s = "1 2 - 4 5 *";
-	int i, c;
-	while ((s[0] = c = getch()) == ' ' || c == '\t')
-	{
-
-	}
-	s[1] = '\0';
-	if (!isdigit(c) && c != '.')
-		return c;
-	i = 0;
-	if (isdigit(c))
-	{
-		while (isdigit(s[++i] = c = getch()))
-		{
-
-		}
-	}
-	if (c == '.')
-	{
-		while (isdigit(s[++i] = c = getch()))
-		{
-
-		}
-	}
-	s[i] = '\0';
-	if (c != EOF)
-		ungetch(c);
-	return NUMBER;		
-}*/
