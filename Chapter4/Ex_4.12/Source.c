@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <limits.h>
 #include <math.h>
-#define MAX 3
+#define MAX 100
 
 void itoa(int numb, char str[]);
 
